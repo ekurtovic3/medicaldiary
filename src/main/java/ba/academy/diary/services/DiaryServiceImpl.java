@@ -23,6 +23,7 @@ public class DiaryServiceImpl implements DiaryService {
     return myobjects;
   }
 
+
   @Override
   public DiaryInput getDiaryById(int id) {
     return myobjects.stream()
@@ -30,6 +31,10 @@ public class DiaryServiceImpl implements DiaryService {
             .findFirst()
             .orElse(null);
 
+  }
+  @Override
+  public boolean deleteDiaryById(int id) {
+    return myobjects.remove(id) == null ? false : true;
   }
 
   @Override

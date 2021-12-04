@@ -2,13 +2,12 @@ package ba.academy.diary;
 
 import ba.academy.diary.dto.DiaryInput;
 import ba.academy.diary.services.DiaryService;
-import org.jboss.resteasy.annotations.jaxrs.PathParam;
+import org.jboss.resteasy.annotations.Query;
 
 import java.util.List;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
@@ -31,10 +30,11 @@ public class DiaryResource {
     }
     return  Response.ok(allDiaryInputs).build();
   }
-  // GET - get by id
+
   @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getDiaryById(@QueryParam("id") int id, @Context UriInfo uriInfo)
+  @Path("{id}")
+  @Consumes({MediaType.APPLICATION_JSON})
+  public Response getDiaryById(@PathParam("id") int id, @Context UriInfo uriInfo)
   {
     DiaryInput diary = diaryService.getDiaryById(id);
     if(diary != null) {
@@ -44,8 +44,20 @@ public class DiaryResource {
     }
     return Response.noContent().build();
   }
-  // DELETE - by id
 
+  @DELETE   // DELETE - by id
+  @Path("{id}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response deleteDiaryById(@PathParam("id") int id, @Context UriInfo uriInfo)
+  {
+   // DiaryInput diary = ;
+    if(diaryService.deleteDiaryById(id)) {
+      UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
+      uriBuilder.path(String.valueOf(id));
+      return Response.ok().build();
+    }
+    return Response.noContent().build();
+  }
   @POST
   @Consumes({MediaType.APPLICATION_JSON})
   @Produces(value = MediaType.APPLICATION_JSON)

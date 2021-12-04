@@ -7,5 +7,6 @@ public interface DiaryService {
 
   List<DiaryInput> getDiary();
   DiaryInput getDiaryById(int id);
+  boolean deleteDiaryById(int id);
   DiaryInput addDiaryInput(DiaryInput input);
 }
