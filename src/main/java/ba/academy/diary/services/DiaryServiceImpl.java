@@ -24,6 +24,15 @@ public class DiaryServiceImpl implements DiaryService {
   }
 
   @Override
+  public DiaryInput getDiaryById(int id) {
+    return myobjects.stream()
+            .filter(object -> id==object.getId())
+            .findFirst()
+            .orElse(null);
+
+  }
+
+  @Override
   public DiaryInput addDiaryInput(DiaryInput input) {
     Random rand = new Random(); //instance of random class
     input.setDate(new Date());

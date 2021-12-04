@@ -2,13 +2,11 @@ package ba.academy.diary;
 
 import ba.academy.diary.dto.DiaryInput;
 import ba.academy.diary.services.DiaryService;
+import org.jboss.resteasy.annotations.jaxrs.PathParam;
+
 import java.util.List;
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
@@ -20,8 +18,8 @@ import javax.ws.rs.core.UriInfo;
 public class DiaryResource {
 
   @Inject DiaryService diaryService;
-  // GET - get by id
-  // DELETE - by id
+
+
   // PUT - update by id
 
   @GET
@@ -33,6 +31,20 @@ public class DiaryResource {
     }
     return  Response.ok(allDiaryInputs).build();
   }
+  // GET - get by id
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getDiaryById(@QueryParam("id") int id, @Context UriInfo uriInfo)
+  {
+    DiaryInput diary = diaryService.getDiaryById(id);
+    if(diary != null) {
+      UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
+      uriBuilder.path(String.valueOf(id));
+      return Response.ok(uriBuilder.build()).entity(diary).build();
+    }
+    return Response.noContent().build();
+  }
+  // DELETE - by id
 
   @POST
   @Consumes({MediaType.APPLICATION_JSON})
