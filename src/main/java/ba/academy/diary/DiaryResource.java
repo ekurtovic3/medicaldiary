@@ -1,9 +1,6 @@
 package ba.academy.diary;
-
 import ba.academy.diary.dto.DiaryInput;
 import ba.academy.diary.services.DiaryService;
-import org.jboss.resteasy.annotations.Query;
-
 import java.util.List;
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -19,7 +16,7 @@ public class DiaryResource {
   @Inject DiaryService diaryService;
 
 
-  // PUT - update by id
+
 
   @GET
   public Response getDiary()
@@ -50,7 +47,6 @@ public class DiaryResource {
   @Produces(MediaType.APPLICATION_JSON)
   public Response deleteDiaryById(@PathParam("id") int id, @Context UriInfo uriInfo)
   {
-   // DiaryInput diary = ;
     if(diaryService.deleteDiaryById(id)) {
       UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
       uriBuilder.path(String.valueOf(id));
@@ -73,4 +69,18 @@ public class DiaryResource {
     return Response.status(Response.Status.BAD_REQUEST).build();
   }
 
+  @PUT  // PUT - update by id
+  @Path("{id}")
+  @Consumes({MediaType.APPLICATION_JSON})
+  @Produces(value = MediaType.APPLICATION_JSON)
+  public Response editDiary(@PathParam("id") int id,DiaryInput diaryInput, @Context UriInfo uriInfo)
+  {
+    DiaryInput storedDiary = diaryService.editDiary(id,diaryInput);
+    if(storedDiary != null) {
+      UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
+      uriBuilder.path(Integer.toString(storedDiary.getId()));
+      return Response.created(uriBuilder.build()).status(Response.Status.OK).entity(storedDiary).build();
+    }
+    return Response.status(Response.Status.BAD_REQUEST).build();
+  }
 }
